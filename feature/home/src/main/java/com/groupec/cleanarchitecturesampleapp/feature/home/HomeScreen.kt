@@ -1,271 +1,143 @@
 package com.groupec.cleanarchitecturesampleapp.feature.home
 
-import androidx.annotation.VisibleForTesting
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.windowInsetsBottomHeight
-import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
-import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
-import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridItemSpan
-import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.google.samples.apps.nowinandroid.core.designsystem.component.NiaLoadingWheel
-import com.google.samples.apps.nowinandroid.core.designsystem.component.scrollbar.DraggableScrollbar
-import com.google.samples.apps.nowinandroid.core.designsystem.component.scrollbar.rememberDraggableScroller
-import com.google.samples.apps.nowinandroid.core.designsystem.component.scrollbar.scrollbarState
-import com.google.samples.apps.nowinandroid.core.designsystem.theme.LocalTintTheme
-import com.google.samples.apps.nowinandroid.core.designsystem.theme.NiaTheme
-import com.google.samples.apps.nowinandroid.core.model.data.UserNewsResource
-import com.google.samples.apps.nowinandroid.core.ui.NewsFeedUiState
-import com.google.samples.apps.nowinandroid.core.ui.NewsFeedUiState.Loading
-import com.google.samples.apps.nowinandroid.core.ui.NewsFeedUiState.Success
-import com.google.samples.apps.nowinandroid.core.ui.TrackScreenViewEvent
-import com.google.samples.apps.nowinandroid.core.ui.TrackScrollJank
-import com.google.samples.apps.nowinandroid.core.ui.UserNewsResourcePreviewParameterProvider
-import com.google.samples.apps.nowinandroid.core.ui.newsFeed
-import com.groupec.cleanarchitecturesampleapp.core.model.Repository
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import com.groupec.cleanarchitecturesampleapp.core.model.data.Order
+import com.groupec.cleanarchitecturesampleapp.core.ui.ComposableLifecycle
+import com.groupec.cleanarchitecturesampleapp.core.designsystem.R
+import com.groupec.cleanarchitecturesampleapp.core.toDateString
+
 
 @Composable
 internal fun HomeRoute(
-    onRepositoryClick: (Repository) -> Unit,
+    onOrderClick: (Order) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
-    val feedState by viewModel.feedUiState.collectAsStateWithLifecycle()
-    BookmarksScreen(
-        feedState = feedState,
-        onShowSnackbar = onShowSnackbar,
-        removeFromBookmarks = viewModel::removeFromSavedResources,
-        onNewsResourceViewed = { viewModel.setNewsResourceViewed(it, true) },
-        onTopicClick = onTopicClick,
-        modifier = modifier,
-        shouldDisplayUndoBookmark = viewModel.shouldDisplayUndoBookmark,
-        undoBookmarkRemoval = viewModel::undoBookmarkRemoval,
-        clearUndoState = viewModel::clearUndoState,
-    )
-}
-
-/**
- * Displays the user's bookmarked articles. Includes support for loading and empty states.
- */
-@VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-@Composable
-internal fun BookmarksScreen(
-    feedState: NewsFeedUiState,
-    onShowSnackbar: suspend (String, String?) -> Boolean,
-    removeFromBookmarks: (String) -> Unit,
-    onNewsResourceViewed: (String) -> Unit,
-    onTopicClick: (String) -> Unit,
-    modifier: Modifier = Modifier,
-    shouldDisplayUndoBookmark: Boolean = false,
-    undoBookmarkRemoval: () -> Unit = {},
-    clearUndoState: () -> Unit = {},
-) {
-    val bookmarkRemovedMessage = stringResource(id = R.string.feature_bookmarks_removed)
-    val undoText = stringResource(id = R.string.feature_bookmarks_undo)
-
-    LaunchedEffect(shouldDisplayUndoBookmark) {
-        if (shouldDisplayUndoBookmark) {
-            val snackBarResult = onShowSnackbar(bookmarkRemovedMessage, undoText)
-            if (snackBarResult) {
-                undoBookmarkRemoval()
-            } else {
-                clearUndoState()
-            }
-        }
-    }
-
-    LifecycleEventEffect(Lifecycle.Event.ON_STOP) {
-        clearUndoState()
-    }
-
-    when (feedState) {
-        Loading -> LoadingState(modifier)
-        is Success -> if (feedState.feed.isNotEmpty()) {
-            BookmarksGrid(
-                feedState,
-                removeFromBookmarks,
-                onNewsResourceViewed,
-                onTopicClick,
-                modifier,
-            )
-        } else {
-            EmptyState(modifier)
-        }
-    }
-
-    TrackScreenViewEvent(screenName = "Saved")
-}
-
-@Composable
-private fun LoadingState(modifier: Modifier = Modifier) {
-    NiaLoadingWheel(
+    val orderState by viewModel.orderUiState.collectAsStateWithLifecycle()
+    HomeScreen(
+        orderState = orderState,
+        onOrderClick = onOrderClick,
+        getOrders = viewModel::getOrders,
         modifier = modifier
-            .fillMaxWidth()
-            .wrapContentSize()
-            .testTag("forYou:loading"),
-        contentDesc = stringResource(id = R.string.feature_bookmarks_loading),
     )
 }
 
+
 @Composable
-private fun BookmarksGrid(
-    feedState: NewsFeedUiState,
-    removeFromBookmarks: (String) -> Unit,
-    onNewsResourceViewed: (String) -> Unit,
-    onTopicClick: (String) -> Unit,
-    modifier: Modifier = Modifier,
+internal fun HomeScreen(
+    orderState: OrderUiState,
+    onOrderClick: (Order) -> Unit,
+    getOrders: () -> Unit,
+    modifier: Modifier = Modifier
+
 ) {
-    val scrollableState = rememberLazyStaggeredGridState()
-    TrackScrollJank(scrollableState = scrollableState, stateName = "bookmarks:grid")
+    ComposableLifecycle(
+        onResume = { getOrders() }
+    )
+
+    Box {
+        when (orderState) {
+            is OrderUiState.Loading -> LoadingScreen()
+            is OrderUiState.Empty -> EmptyScreen()
+            is OrderUiState.Success -> OrderList(orderState.orders)
+            is OrderUiState.Error -> ErrorScreen(orderState.message)
+        }
+    }
+}
+
+
+@Composable
+fun LoadingScreen() {
     Box(
-        modifier = modifier
-            .fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
     ) {
-        LazyVerticalStaggeredGrid(
-            columns = StaggeredGridCells.Adaptive(300.dp),
-            contentPadding = PaddingValues(16.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            verticalItemSpacing = 24.dp,
-            state = scrollableState,
+        CircularProgressIndicator()
+    }
+}
+
+@Composable
+fun EmptyScreen() {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(text = "No data available")
+    }
+}
+
+@Composable
+fun ErrorScreen(error: String) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(text = "Error: $error")
+    }
+}
+
+@Composable
+fun OrderList(orders: List<Order>) {
+    Column {
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data("https://find.groupec.net/images/groupec-logo-large.png")
+                .crossfade(true)
+                .build(),
+            placeholder = painterResource(R.drawable.ic_launcher_foreground),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
             modifier = Modifier
-                .fillMaxSize()
-                .testTag("bookmarks:feed"),
-        ) {
-            newsFeed(
-                feedState = feedState,
-                onNewsResourcesCheckedChanged = { id, _ -> removeFromBookmarks(id) },
-                onNewsResourceViewed = onNewsResourceViewed,
-                onTopicClick = onTopicClick,
-            )
-            item(span = StaggeredGridItemSpan.FullLine) {
-                Spacer(Modifier.windowInsetsBottomHeight(WindowInsets.safeDrawing))
+                .size(120.dp)
+                .clip(CircleShape)
+            // .border(2.dp, Color.Gray, CircleShape),
+            // colorFilter = ColorFilter.tint(Color.Blue)
+        )
+
+        LazyColumn {
+            items(orders) { order ->
+                RouteItem(order)
             }
         }
-        val itemsAvailable = when (feedState) {
-            Loading -> 1
-            is Success -> feedState.feed.size
+    }
+}
+
+@Composable
+fun RouteItem(order: Order) {
+    Card(modifier = Modifier
+        .fillMaxWidth()
+        .padding(8.dp)) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(text = order.datecreation.toDateString(), style = MaterialTheme.typography.bodySmall)
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(text = order.customerName)
         }
-        val scrollbarState = scrollableState.scrollbarState(
-            itemsAvailable = itemsAvailable,
-        )
-        scrollableState.DraggableScrollbar(
-            modifier = Modifier
-                .fillMaxHeight()
-                .windowInsetsPadding(WindowInsets.systemBars)
-                .padding(horizontal = 2.dp)
-                .align(Alignment.CenterEnd),
-            state = scrollbarState,
-            orientation = Orientation.Vertical,
-            onThumbMoved = scrollableState.rememberDraggableScroller(
-                itemsAvailable = itemsAvailable,
-            ),
-        )
-    }
-}
-
-@Composable
-private fun EmptyState(modifier: Modifier = Modifier) {
-    Column(
-        modifier = modifier
-            .padding(16.dp)
-            .fillMaxSize()
-            .testTag("bookmarks:empty"),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        val iconTint = LocalTintTheme.current.iconTint
-        Image(
-            modifier = Modifier.fillMaxWidth(),
-            painter = painterResource(id = R.drawable.feature_bookmarks_img_empty_bookmarks),
-            colorFilter = if (iconTint != Color.Unspecified) ColorFilter.tint(iconTint) else null,
-            contentDescription = null,
-        )
-
-        Spacer(modifier = Modifier.height(48.dp))
-
-        Text(
-            text = stringResource(id = R.string.feature_bookmarks_empty_error),
-            modifier = Modifier.fillMaxWidth(),
-            textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.Bold,
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Text(
-            text = stringResource(id = R.string.feature_bookmarks_empty_description),
-            modifier = Modifier.fillMaxWidth(),
-            textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.bodyMedium,
-        )
-    }
-}
-
-@Preview
-@Composable
-private fun LoadingStatePreview() {
-    NiaTheme {
-        LoadingState()
-    }
-}
-
-@Preview
-@Composable
-private fun BookmarksGridPreview(
-    @PreviewParameter(UserNewsResourcePreviewParameterProvider::class)
-    userNewsResources: List<UserNewsResource>,
-) {
-    NiaTheme {
-        BookmarksGrid(
-            feedState = Success(userNewsResources),
-            removeFromBookmarks = {},
-            onNewsResourceViewed = {},
-            onTopicClick = {},
-        )
-    }
-}
-
-@Preview
-@Composable
-private fun EmptyStatePreview() {
-    NiaTheme {
-        EmptyState()
     }
 }
