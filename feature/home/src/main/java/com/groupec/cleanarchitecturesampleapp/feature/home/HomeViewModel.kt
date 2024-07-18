@@ -1,45 +1,51 @@
 package com.groupec.cleanarchitecturesampleapp.feature.home
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.samples.apps.nowinandroid.core.model.data.UserNewsResource
-import com.google.samples.apps.nowinandroid.core.ui.NewsFeedUiState
-import com.google.samples.apps.nowinandroid.core.ui.NewsFeedUiState.Loading
+import com.groupec.cleanarchitecturesampleapp.core.Result
+import com.groupec.cleanarchitecturesampleapp.core.asResult
+import com.groupec.cleanarchitecturesampleapp.core.domain.GetOrderUseCase
+import com.groupec.cleanarchitecturesampleapp.core.model.data.Order
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(
-    private val userDataRepository: UserDataRepository,
-    userNewsResourceRepository: UserNewsResourceRepository,
-) : ViewModel() {
+class HomeViewModel @Inject constructor(private val getOrderUseCase: GetOrderUseCase) : ViewModel() {
 
-    var shouldDisplayUndoBookmark by mutableStateOf(false)
-    private var lastRemovedBookmarkId: String? = null
+    private val _orderUiState = MutableStateFlow<OrderUiState>(OrderUiState.Loading)
+    val orderUiState: StateFlow<OrderUiState> = _orderUiState
 
-    val feedUiState: StateFlow<NewsFeedUiState> =
-        userNewsResourceRepository.observeAllBookmarked()
-            .map<List<UserNewsResource>, NewsFeedUiState>(NewsFeedUiState::Success)
-            .onStart { emit(Loading) }
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5_000),
-                initialValue = Loading,
-            )
-
-    /*fun setNewsResourceViewed(newsResourceId: String, viewed: Boolean) {
+    init {
+        getOrders()
+    }
+    fun getOrders() {
         viewModelScope.launch {
-            userDataRepository.setNewsResourceViewed(newsResourceId, viewed)
+            getOrderUseCase()
+                .asResult()
+                .collect { result ->
+                    _orderUiState.value = when (result) {
+                        is Result.Loading-> OrderUiState.Loading
+                        is Result.Success -> {
+                            if (result.data.isEmpty()){
+                                OrderUiState.Empty
+                            } else {
+                                OrderUiState.Success(result.data)
+                            }
+                        }
+                        is Result.Error -> OrderUiState.Error( result.exception.message ?: "Retrofit Unknown error")
+                    }
+                }
         }
-    }*/
+    }
+}
 
+sealed class OrderUiState {
+    data object Loading : OrderUiState()
+    data class Success(val orders: List<Order>) : OrderUiState()
+    data class Error(val message: String) : OrderUiState()
+    data object Empty : OrderUiState()
 }

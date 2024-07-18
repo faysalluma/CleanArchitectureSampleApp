@@ -8,6 +8,9 @@ android {
 
 dependencies {
 
+    implementation(project(":core:data"))
+    implementation(project(":core:model"))
+
     implementation(libs.hilt.android)
     implementation(libs.kotlinx.coroutines.android)
 }

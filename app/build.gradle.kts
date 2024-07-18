@@ -69,7 +69,6 @@ dependencies {
     implementation(project(":core:model"))
     implementation(project(":core:testing"))
 
-    implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.material3.adaptive)
     implementation(libs.androidx.compose.material3.adaptive.layout)
     implementation(libs.androidx.compose.material3.adaptive.navigation)
@@ -77,6 +76,7 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.lifecycle.runtimeCompose)
+    implementation(libs.retrofit.converterGson)
 
     ksp(libs.hilt.compiler)
     kspTest(libs.hilt.compiler)
