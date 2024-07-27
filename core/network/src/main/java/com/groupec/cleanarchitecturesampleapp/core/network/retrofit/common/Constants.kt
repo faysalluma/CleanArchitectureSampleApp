@@ -5,6 +5,8 @@ class Constants {
         const val BASE_URL = "https://sampleapp.groupec.net/public/"
 
         // Get endpoint
-        const val GET_ORDER = "commands"
+        const val GET_ORDERS = "commands"
+        // Get endpoint
+        const val GET_PRODUCTS = "products/{orderid}"
     }
 }

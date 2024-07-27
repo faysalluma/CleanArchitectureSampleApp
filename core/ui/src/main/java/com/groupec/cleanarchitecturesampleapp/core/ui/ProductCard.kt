@@ -13,25 +13,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import com.groupec.cleanarchitecturesampleapp.core.designsystem.theme.CleanArchitectureSampleAppTheme
 import com.groupec.cleanarchitecturesampleapp.core.model.data.Order
+import com.groupec.cleanarchitecturesampleapp.core.model.data.Product
 import com.groupec.cleanarchitecturesampleapp.core.toDate
 import com.groupec.cleanarchitecturesampleapp.core.toDateString
 
 @Composable
-fun OrderCard(order: Order) {
+fun ProductCard(product: Product) {
     ListItem(
-        headlineContent = { Text(order.datecreation.toDateString(), fontWeight = FontWeight.Bold) },
+        headlineContent = { Text(text = product.libelle, fontWeight = FontWeight.Bold) },
         supportingContent = {
-            Text(order.customerName)
-        },
-        leadingContent = {
-            Text(text = stringResource(id = R.string.title_number, order.id))
-        },
-        trailingContent = {
-            Icon(
-                Icons.Filled.Star,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary
-            )
+            Text(product.desc)
         }
     )
     Divider()
@@ -40,8 +31,8 @@ fun OrderCard(order: Order) {
 @Preview
 // @Preview(device = Devices.TABLET)
 @Composable
-fun OrderCardPreview() {
+fun ProductCardPreview() {
     CleanArchitectureSampleAppTheme {
-        OrderCard(order = Order(1, "2022-10-02 10:00:03".toDate()!!, "Jean"))
+        ProductCard(product = Product(1, "Jean", "Lorem Ipsun"))
     }
 }

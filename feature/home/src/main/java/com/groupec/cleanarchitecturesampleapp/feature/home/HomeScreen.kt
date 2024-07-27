@@ -11,7 +11,7 @@ import com.groupec.cleanarchitecturesampleapp.core.designsystem.component.ErrorS
 import com.groupec.cleanarchitecturesampleapp.core.designsystem.component.LoadingScreen
 import com.groupec.cleanarchitecturesampleapp.core.model.data.Order
 import com.groupec.cleanarchitecturesampleapp.core.ui.ComposableLifecycle
-import com.groupec.cleanarchitecturesampleapp.core.ui.OrderCardList
+import com.groupec.cleanarchitecturesampleapp.core.ui.OrderCardListWithSearchBar
 
 
 @Composable
@@ -46,7 +46,7 @@ internal fun HomeScreen(
         when (orderState) {
             is OrderUiState.Loading -> LoadingScreen()
             is OrderUiState.Empty -> EmptyScreen()
-            is OrderUiState.Success -> OrderCardList(orderState.orders, onOrderClick)
+            is OrderUiState.Success -> OrderCardListWithSearchBar(orderState.orders, onOrderClick)
             is OrderUiState.Error -> ErrorScreen(orderState.message)
         }
     }

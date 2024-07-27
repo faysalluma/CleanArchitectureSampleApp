@@ -1,5 +1,7 @@
 package com.groupec.cleanarchitecturesampleapp.navigation
 
+import androidx.compose.animation.ExitTransition.Companion.None as ExitNone
+import androidx.compose.animation.EnterTransition.Companion.None as EnterNone
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.compose.ui.Modifier
@@ -19,7 +21,9 @@ fun AppNavHost(
     NavHost(
         modifier = modifier,
         navController = navController,
-        startDestination = startDestination
+        startDestination = startDestination,
+  /*      enterTransition = { EnterNone },
+        exitTransition = { ExitNone }*/
     ) {
         homeScreen(
             onOrderClick = { order ->
