@@ -16,6 +16,10 @@
 
 package com.groupec.cleanarchitecturesampleapp.core.network.di
 
+import android.content.Context
+import com.facebook.flipper.android.AndroidFlipperClient
+import com.facebook.flipper.plugins.network.FlipperOkhttpInterceptor
+import com.facebook.flipper.plugins.network.NetworkFlipperPlugin
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.groupec.cleanarchitecturesampleapp.core.network.retrofit.ApiService
@@ -23,6 +27,7 @@ import com.groupec.cleanarchitecturesampleapp.core.network.retrofit.common.Const
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -36,9 +41,10 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun provideHttpClient() : OkHttpClient {
+    fun provideHttpClient(@ApplicationContext context: Context) : OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+            .addNetworkInterceptor(FlipperOkhttpInterceptor(getNetworkFlipperPlugin(context)))
             .build()
     }
 
@@ -69,4 +75,8 @@ class NetworkModule {
     fun provideApiService(retrofit: Retrofit) : ApiService {
         return retrofit.create(ApiService::class.java)
     }
+
+    private fun getNetworkFlipperPlugin(context: Context) = AndroidFlipperClient
+        .getInstance(context)
+        .getPluginByClass(NetworkFlipperPlugin::class.java)
 }

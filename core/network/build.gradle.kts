@@ -2,6 +2,7 @@
 plugins {
     alias(libs.plugins.common.android.library)
     alias(libs.plugins.common.android.hilt)
+    alias(libs.plugins.common.android.flipper)
 }
 
 android {

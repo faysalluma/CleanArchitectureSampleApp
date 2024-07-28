@@ -1,10 +1,8 @@
 import com.android.build.api.dsl.ApplicationExtension
 import com.groupec.cleanarchitecturesampleapp.configureKotlinAndroid
-import com.groupec.cleanarchitecturesampleapp.libs
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
-import java.util.Date
 
 class AndroidApplicationConventionPlugin: Plugin<Project> {
     override fun apply(project: Project) {
@@ -12,6 +10,7 @@ class AndroidApplicationConventionPlugin: Plugin<Project> {
             with(project.pluginManager) {
                 apply("com.android.application")
                 apply("org.jetbrains.kotlin.android")
+                apply("gradlePlugins.android.flipper")
             }
 
             extensions.configure<ApplicationExtension> {
