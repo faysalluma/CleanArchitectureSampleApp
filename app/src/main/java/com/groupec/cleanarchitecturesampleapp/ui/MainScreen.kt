@@ -11,8 +11,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.navigation.NavArgument
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.google.gson.Gson
@@ -27,36 +25,28 @@ import com.groupec.cleanarchitecturesampleapp.feature.home.navigation.HOME_ROUTE
 
 
 @Composable
-fun MainScreen(connectionState: Boolean /*, navController: NavHostController = rememberNavController()*/) {
+fun MainScreen(connectionState: Boolean, navController: NavHostController = rememberNavController()) {
     var appBarTitle = stringResource(id = R.string.app_name)
     var onNavigationClick : (() -> Unit) ? = null
     var dropDownItemsMenu: List<Pair<String, () -> Unit>>  = emptyList()
 
-    val navController = rememberNavController()
     val currentDestination = remember {
-        mutableStateOf(
-            Destination(navController.currentDestination?.route,
-            null)
-        )
+        mutableStateOf(navController.currentDestination?.route)
     }
 
     LaunchedEffect(navController) {
         navController.addOnDestinationChangedListener { _, destination, arguments ->
-            currentDestination.value = Destination(
-                destination.route?.substringBeforeLast("/")?.substringBeforeLast("?"),
-                arguments
-            )
-
+            currentDestination.value = destination.route?.substringBeforeLast("/")?.substringBeforeLast("?")
         }
     }
 
-    when (currentDestination.value.route) {
+    when (currentDestination.value) {
         HOME_ROUTE -> {
             dropDownItemsMenu = getDropdownItemsWithActions(navController)
         }
         DETAIL_ROUTE -> {
             // Get arguments and show it in TopBar
-            val orderJsonString =  currentDestination.value.arguments?.getString(ARG_ORDER)
+            val orderJsonString =  navController.currentBackStackEntry?.arguments?.getString(ARG_ORDER)
             val order = Gson().fromJson(orderJsonString, Order::class.java)
             appBarTitle ="Order ${order.id}"
 
@@ -97,4 +87,3 @@ fun getDropdownItemsWithActions(navController: NavHostController): List<Pair<Str
     )
 }
 
-data class Destination(val route: String?, val arguments: Bundle?)
