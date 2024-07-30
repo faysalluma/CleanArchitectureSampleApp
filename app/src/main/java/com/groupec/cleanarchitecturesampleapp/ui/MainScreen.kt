@@ -1,6 +1,5 @@
 package com.groupec.cleanarchitecturesampleapp.ui
 
-import android.os.Bundle
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -17,18 +16,19 @@ import com.google.gson.Gson
 import com.groupec.cleanarchitecturesampleapp.R
 import com.groupec.cleanarchitecturesampleapp.core.designsystem.SampleTopAppBar
 import com.groupec.cleanarchitecturesampleapp.core.designsystem.component.ErrorScreen
-import com.groupec.cleanarchitecturesampleapp.navigation.AppNavHost
 import com.groupec.cleanarchitecturesampleapp.core.model.data.Order
-import com.groupec.cleanarchitecturesampleapp.feature.detail.navigation.ARG_ORDER
-import com.groupec.cleanarchitecturesampleapp.feature.detail.navigation.DETAIL_ROUTE
-import com.groupec.cleanarchitecturesampleapp.feature.home.navigation.HOME_ROUTE
+import com.groupec.cleanarchitecturesampleapp.navigation.AppNavHost
+import com.groupec.cleanarchitecturesampleapp.navigation.NavigationItem
 
 
 @Composable
-fun MainScreen(connectionState: Boolean, navController: NavHostController = rememberNavController()) {
+fun MainScreen(
+    connectionState: Boolean,
+    navController: NavHostController = rememberNavController()
+) {
     var appBarTitle = stringResource(id = R.string.app_name)
-    var onNavigationClick : (() -> Unit) ? = null
-    var dropDownItemsMenu: List<Pair<String, () -> Unit>>  = emptyList()
+    var onNavigationClick: (() -> Unit)? = null
+    var dropDownItemsMenu: List<Pair<String, () -> Unit>> = emptyList()
 
     val currentDestination = remember {
         mutableStateOf(navController.currentDestination?.route)
@@ -36,25 +36,27 @@ fun MainScreen(connectionState: Boolean, navController: NavHostController = reme
 
     LaunchedEffect(navController) {
         navController.addOnDestinationChangedListener { _, destination, arguments ->
-            currentDestination.value = destination.route?.substringBeforeLast("/")?.substringBeforeLast("?")
+            currentDestination.value =
+                destination.route?.substringBeforeLast("/")?.substringBeforeLast("?")
         }
     }
 
     when (currentDestination.value) {
-        HOME_ROUTE -> {
+        NavigationItem.Home.route -> {
             dropDownItemsMenu = getDropdownItemsWithActions(navController)
         }
-        DETAIL_ROUTE -> {
+
+        NavigationItem.Detail.route -> {
             // Get arguments and show it in TopBar
-            val orderJsonString =  navController.currentBackStackEntry?.arguments?.getString(ARG_ORDER)
-            val order = Gson().fromJson(orderJsonString, Order::class.java)
-            appBarTitle ="Order ${order.id}"
+            val order = navController.previousBackStackEntry?.savedStateHandle?.get<Order>("order")
+            appBarTitle = "Order ${order?.id}"
 
             // Definie onNavigationClick method
             onNavigationClick = {
                 navController.popBackStack()
             }
         }
+
         else -> {
             // Handle unexpected destinations (optional)
         }

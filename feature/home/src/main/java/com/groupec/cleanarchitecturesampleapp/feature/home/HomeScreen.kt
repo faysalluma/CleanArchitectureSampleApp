@@ -13,31 +13,14 @@ import com.groupec.cleanarchitecturesampleapp.core.model.data.Order
 import com.groupec.cleanarchitecturesampleapp.core.ui.ComposableLifecycle
 import com.groupec.cleanarchitecturesampleapp.core.ui.OrderCardListWithSearchBar
 
-
 @Composable
-internal fun HomeRoute(
+fun HomeScreen(
     onOrderClick: (Order) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     val orderState by viewModel.orderUiState.collectAsStateWithLifecycle()
-    HomeScreen(
-        orderState = orderState,
-        onOrderClick = onOrderClick,
-        getOrders = viewModel::getOrders,
-        modifier = modifier
-    )
-}
 
-
-@Composable
-internal fun HomeScreen(
-    orderState: OrderUiState,
-    onOrderClick: (Order) -> Unit,
-    getOrders: () -> Unit,
-    modifier: Modifier = Modifier
-
-) {
     ComposableLifecycle(
         // onResume = { getOrders() }
     )
@@ -46,8 +29,8 @@ internal fun HomeScreen(
         when (orderState) {
             is OrderUiState.Loading -> LoadingScreen()
             is OrderUiState.Empty -> EmptyScreen()
-            is OrderUiState.Success -> OrderCardListWithSearchBar(orderState.orders, onOrderClick)
-            is OrderUiState.Error -> ErrorScreen(orderState.message)
+            is OrderUiState.Success -> OrderCardListWithSearchBar((orderState as OrderUiState.Success).orders, onOrderClick)
+            is OrderUiState.Error -> ErrorScreen((orderState as OrderUiState.Error).message)
         }
     }
 }
