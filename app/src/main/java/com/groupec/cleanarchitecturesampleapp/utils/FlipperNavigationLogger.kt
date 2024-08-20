@@ -4,8 +4,7 @@ import android.os.Bundle
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import com.facebook.flipper.plugins.navigation.NavigationFlipperPlugin
-import com.groupec.cleanarchitecturesampleapp.feature.detail.navigation.DETAIL_ROUTE
-import com.groupec.cleanarchitecturesampleapp.feature.home.navigation.HOME_ROUTE
+import com.groupec.cleanarchitecturesampleapp.navigation.NavigationItem
 
 class FlipperNavigationLogger(private val flipperPlugin: NavigationFlipperPlugin) : NavController.OnDestinationChangedListener {
     override fun onDestinationChanged(
@@ -22,8 +21,8 @@ class FlipperNavigationLogger(private val flipperPlugin: NavigationFlipperPlugin
 fun NavController.currentDestinationClassName(): String? {
     val route = currentBackStackEntry?.destination?.route
     return when (route?.substringBeforeLast("/")?.substringBeforeLast("?")) {
-        HOME_ROUTE -> featurePackage.plus(".HomeScreen")
-        DETAIL_ROUTE -> featurePackage.plus(".DetailScreen")
+        NavigationItem.Home.route -> featurePackage.plus(".HomeScreen")
+        NavigationItem.Detail.route -> featurePackage.plus(".DetailScreen")
         else -> null
     }
 }

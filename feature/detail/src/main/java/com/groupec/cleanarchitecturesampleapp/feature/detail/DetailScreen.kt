@@ -24,40 +24,28 @@ import com.groupec.cleanarchitecturesampleapp.core.ui.ProductCardList
 
 
 @Composable
-internal fun DetailRoute(
-    order: Order? = null,
+fun DetailScreen(
+    order: Order?,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: DetailViewModel = hiltViewModel(),
+    viewModel: DetailViewModel = hiltViewModel()
 ) {
     val productState by viewModel.productUiState.collectAsStateWithLifecycle()
-    DetailScreen(
-        modifier = modifier,
-        productState = productState,
-        order = order,
-        onBackClick = onBackClick,
-        getProducts = viewModel::getProducts
-    )
-}
 
-@Composable
-internal fun DetailScreen(
-    modifier: Modifier = Modifier,
-    productState: ProductUiState,
-    order: Order? = null,
-    onBackClick: () -> Unit,
-    getProducts: (Int) -> Unit,
-) {
     ComposableLifecycle(
-        onCreate = { order?.let { getProducts(it.id) } }
+        onCreate = {
+            order?.let {
+                viewModel.getProducts(it.id)
+            }
+        }
     )
 
     Box {
         when (productState) {
             is ProductUiState.Loading -> LoadingScreen()
             is ProductUiState.Empty -> EmptyScreen()
-            is ProductUiState.Success -> ProductScreen(productState.products, onBackClick)
-            is ProductUiState.Error -> ErrorScreen(productState.message)
+            is ProductUiState.Success -> ProductScreen((productState as ProductUiState.Success).products, onBackClick)
+            is ProductUiState.Error -> ErrorScreen((productState as ProductUiState.Error).message)
         }
     }
 }
