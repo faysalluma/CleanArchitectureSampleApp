@@ -1,44 +1,45 @@
 package com.groupec.cleanarchitecturesampleapp.navigation
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.navigation.NavHostController
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.currentBackStackEntryAsState
-import com.groupec.cleanarchitecturesampleapp.feature.detail.navigation.DETAIL_ROUTE
-import com.groupec.cleanarchitecturesampleapp.feature.detail.navigation.detailScreen
-import com.groupec.cleanarchitecturesampleapp.feature.home.navigation.HOME_ROUTE
-import com.groupec.cleanarchitecturesampleapp.feature.home.navigation.homeScreen
-import com.groupec.cleanarchitecturesampleapp.feature.home.navigation.navigateToDetail
+import androidx.navigation.compose.composable
+import com.groupec.cleanarchitecturesampleapp.core.model.data.Order
+import com.groupec.cleanarchitecturesampleapp.feature.detail.DetailScreen
+import com.groupec.cleanarchitecturesampleapp.feature.home.HomeScreen
 
 @Composable
 fun AppNavHost(
     modifier: Modifier,
     navController: NavHostController,
-    startDestination: String = HOME_ROUTE,
+    startDestination: String = NavigationItem.Home.route,
 ) {
     NavHost(
         modifier = modifier,
         navController = navController,
-        startDestination = startDestination
+        startDestination = startDestination,
+        enterTransition = {
+            EnterTransition.None
+        },
+        exitTransition = {
+            ExitTransition.None
+        }
     ) {
-        homeScreen(
-            onOrderClick = navController::navigateToDetail
-        )
-        detailScreen(
-            onBackClick = navController::popBackStack
-        )
-    }
-}
+        composable(NavigationItem.Home.route) {
+            HomeScreen(
+                onOrderClick = { order ->
+                    navController.currentBackStackEntry?.savedStateHandle?.set("order", order)
+                    navController.navigate(NavigationItem.Detail.route)
+                }
+            )
+        }
 
-@Composable
-private fun getCurrentRoute(navController: NavController): String? {
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    return when (navBackStackEntry?.destination?.route?.substringBeforeLast("/")?.substringBeforeLast("?")) {
-        HOME_ROUTE -> HOME_ROUTE
-        DETAIL_ROUTE -> DETAIL_ROUTE
-        else -> null
+        composable(NavigationItem.Detail.route) {
+            val order = navController.previousBackStackEntry?.savedStateHandle?.get<Order>("order")
+            DetailScreen(order, onBackClick = { navController.popBackStack() })
+        }
     }
 }
