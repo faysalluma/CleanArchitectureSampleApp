@@ -22,18 +22,6 @@ android {
         }
     }
 
-    signingConfigs {
-        create("release") {
-            val properties = Properties().apply {
-                load(project.rootProject.file("local.properties").inputStream())
-            }
-            storeFile = file(properties.getProperty("RELEASE_STORE_FILE"))
-            storePassword = properties.getProperty("RELEASE_STORE_PASSWORD")
-            keyAlias = properties.getProperty("RELEASE_KEY_ALIAS")
-            keyPassword = properties.getProperty("RELEASE_KEY_PASSWORD")
-        }
-    }
-
     buildTypes {
 
         debug {
@@ -46,7 +34,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            signingConfig = signingConfigs.getByName("release")
+            signingConfig = null // Disable signing for release builds
         }
     }
 
