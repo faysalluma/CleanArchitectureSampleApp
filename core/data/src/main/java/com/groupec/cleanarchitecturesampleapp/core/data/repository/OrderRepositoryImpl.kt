@@ -22,4 +22,18 @@ class OrderRepositoryImpl @Inject constructor(private val apiService: ApiService
         )
         emit(result)
     }.flowOn(Dispatchers.IO)
+
+    /*override fun getRandom(): Flow<NetworkResult<List<Order>>> = flow {
+        try {
+            val response = apiService.getRandomDog()
+            if (response.isSuccessful) {
+                val orders = response.body()?.commands?.map { it.toOrder() } ?: emptyList()
+                emit(NetworkResult.Success(orders))
+            } else {
+                emit(NetworkResult.Error(HttpException(response)))
+            }
+        } catch (e: Exception) {
+            emit(NetworkResult.Error(e))
+        }
+    }.flowOn(Dispatchers.IO)*/
 }
