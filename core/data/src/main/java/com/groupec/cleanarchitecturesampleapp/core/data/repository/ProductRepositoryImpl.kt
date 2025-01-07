@@ -5,6 +5,7 @@ import com.groupec.cleanarchitecturesampleapp.core.data.model.toProduct
 import com.groupec.cleanarchitecturesampleapp.core.model.data.Product
 import com.groupec.cleanarchitecturesampleapp.core.network.retrofit.ApiService
 import com.groupec.cleanarchitecturesampleapp.core.network.retrofit.common.safeApiCall
+import com.groupec.cleanarchitecturesampleapp.core.network.retrofit.common.safeApiCallGetResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -15,11 +16,12 @@ import javax.inject.Singleton
 @Singleton
 class ProductRepositoryImpl @Inject constructor(private val apiService: ApiService) : ProductRepository {
     override fun getProducts(orderId: Int): Flow<List<Product>> = flow {
-        val result = safeApiCall(
+        val result = safeApiCallGetResult(
             apiCall = { apiService.getProducts(orderId) },
             transform = { response ->
                 response.products.map { it.toProduct() }
-            }
+            },
+            default = emptyList()
         )
         emit(result)
     }.flowOn(Dispatchers.IO)

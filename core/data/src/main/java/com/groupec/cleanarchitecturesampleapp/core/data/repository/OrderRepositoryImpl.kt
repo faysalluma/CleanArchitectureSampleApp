@@ -1,9 +1,11 @@
 package com.groupec.cleanarchitecturesampleapp.core.data.repository
 
 import com.groupec.cleanarchitecturesampleapp.core.data.model.toOrder
+import com.groupec.cleanarchitecturesampleapp.core.data.model.toOrderList
 import com.groupec.cleanarchitecturesampleapp.core.model.data.Order
 import com.groupec.cleanarchitecturesampleapp.core.network.retrofit.ApiService
 import com.groupec.cleanarchitecturesampleapp.core.network.retrofit.common.safeApiCall
+import com.groupec.cleanarchitecturesampleapp.core.network.retrofit.common.safeApiCallGetResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -14,11 +16,13 @@ import javax.inject.Singleton
 @Singleton
 class OrderRepositoryImpl @Inject constructor(private val apiService: ApiService) : OrderRepository {
     override fun getOrders(): Flow<List<Order>> = flow {
-        val result = safeApiCall(
+        val result = safeApiCallGetResult(
             apiCall = { apiService.getOrders() },
             transform = { response ->
+                // response.toOrderList()
                 response.commands.map { it.toOrder() }
-            }
+            },
+            default = emptyList()
         )
         emit(result)
     }.flowOn(Dispatchers.IO)
