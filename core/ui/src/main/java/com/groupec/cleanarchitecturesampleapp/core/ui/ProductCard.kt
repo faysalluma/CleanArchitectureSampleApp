@@ -20,6 +20,9 @@ import com.groupec.cleanarchitecturesampleapp.core.toDateString
 @Composable
 fun ProductCard(product: Product) {
     ListItem(
+        /* colors = ListItemDefaults.colors(
+            containerColor = Silver
+        ),*/
         headlineContent = { Text(text = product.libelle, fontWeight = FontWeight.Bold) },
         supportingContent = {
             Text(product.desc)

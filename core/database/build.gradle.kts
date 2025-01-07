@@ -11,7 +11,4 @@ dependencies {
 
     // Modules calls
     implementation(project(":core:model"))
-
-    // Test
-    implementation(project(":core:testing"))
 }

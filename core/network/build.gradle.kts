@@ -19,7 +19,4 @@ dependencies {
     implementation(libs.retrofit.converterGson)
     implementation(libs.retrofit.converterAdapter)
     implementation(libs.retrofit.kotlin.serialization)
-
-
-    testImplementation(libs.kotlinx.coroutines.test)
 }

@@ -46,7 +46,6 @@ android {
 }
 
 dependencies {
-
     implementation(project(":feature:home"))
     implementation(project(":feature:detail"))
 
@@ -55,7 +54,6 @@ dependencies {
     implementation(project(":core:designsystem"))
     implementation(project(":core:data"))
     implementation(project(":core:model"))
-    implementation(project(":core:testing"))
 
     implementation(libs.androidx.compose.material3.adaptive)
     implementation(libs.androidx.compose.material3.adaptive.layout)
@@ -70,6 +68,7 @@ dependencies {
     kspTest(libs.hilt.compiler)
     testImplementation(libs.hilt.android.testing)
 
+    testImplementation(kotlin("test"))
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.navigation.testing)
     androidTestImplementation(libs.hilt.android.testing)

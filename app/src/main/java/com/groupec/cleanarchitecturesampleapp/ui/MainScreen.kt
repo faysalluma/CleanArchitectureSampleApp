@@ -12,9 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.google.gson.Gson
 import com.groupec.cleanarchitecturesampleapp.R
-import com.groupec.cleanarchitecturesampleapp.core.designsystem.SampleTopAppBar
 import com.groupec.cleanarchitecturesampleapp.core.designsystem.component.ErrorScreen
 import com.groupec.cleanarchitecturesampleapp.core.model.data.Order
 import com.groupec.cleanarchitecturesampleapp.navigation.AppNavHost

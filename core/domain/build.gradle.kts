@@ -7,10 +7,11 @@ android {
 }
 
 dependencies {
-
     implementation(project(":core:data"))
     implementation(project(":core:model"))
+    implementation(project(":core:common"))
 
+    testImplementation(kotlin("test"))
     implementation(libs.hilt.android)
     implementation(libs.kotlinx.coroutines.android)
 }
