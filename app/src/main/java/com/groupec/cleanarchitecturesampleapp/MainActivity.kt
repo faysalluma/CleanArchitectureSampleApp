@@ -24,6 +24,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        // throw RuntimeException("Test Crash") // Force a crash
         setContent {
             val connectionState by connectivityManagerUtils.connectionAsStateFlow.collectAsStateWithLifecycle()
             CleanArchitectureSampleAppTheme {

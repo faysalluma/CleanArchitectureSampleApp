@@ -24,6 +24,10 @@ androidxLifecycle = "2.7.0"
 room = "2.6.1"
 androidxDataStore = "1.0.0"
 
+firebase-bom = "33.0.0"
+firebase-crashlytics-gradle = "3.0.3"
+google-services = "4.4.2"
+
 compileSdk = "34"
 versionName = "1.1.0" # X.Y.Z; X = Major, Y = minor, Z = Patch level
 minSdk = "24"
@@ -34,6 +38,9 @@ material = "1.12.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
+firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-bom" }
 junit5 = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
@@ -91,6 +98,8 @@ kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 room = { id = "androidx.room", version.ref = "room" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebase-crashlytics-gradle" }
+google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
 
 # custom plugins defined
 common-android-library-compose = { id = "gradlePlugins.android.library.compose", version = "unspecified" }
