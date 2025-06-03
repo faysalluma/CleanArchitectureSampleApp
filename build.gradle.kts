@@ -10,4 +10,9 @@ plugins {
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.room) apply false
     alias(libs.plugins.compose.compiler) apply false
+
+    // Make sure that you have the Google services Gradle plugin 4.4.1+ dependency
+    alias(libs.plugins.google.services) apply false
+    // Add the dependency for the Crashlytics Gradle plugin
+    alias(libs.plugins.firebase.crashlytics) apply false
 }

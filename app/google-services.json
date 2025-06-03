@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "783161198953",
+    "project_id": "cleanarchitecturesampleapp",
+    "storage_bucket": "cleanarchitecturesampleapp.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:783161198953:android:4a54ec971347d8823a55f8",
+        "android_client_info": {
+          "package_name": "com.groupec.cleanarchitecturesampleapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCCYzkAycrht24Q8FloWVom9pvk4xYTLqw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
