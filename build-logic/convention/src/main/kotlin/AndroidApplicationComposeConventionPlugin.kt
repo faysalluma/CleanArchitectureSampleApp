@@ -9,7 +9,10 @@ import org.gradle.kotlin.dsl.dependencies
 class AndroidApplicationComposeConventionPlugin: Plugin<Project> {
     override fun apply(project: Project) {
         with(project) {
-            project.pluginManager.apply("com.android.application")
+            with(pluginManager) {
+                apply("com.android.application")
+                apply("org.jetbrains.kotlin.plugin.compose")
+            }
 
             extensions.configure<ApplicationExtension> {
                 configureAndroidCompose(this)
