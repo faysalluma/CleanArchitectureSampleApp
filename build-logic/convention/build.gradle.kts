@@ -33,5 +33,9 @@ gradlePlugin {
             id = "gradlePlugins.android.hilt"
             implementationClass = "AndroidHiltConventionPlugin"
         }
+        register("androidFlipper") {
+            id = "gradlePlugins.android.flipper"
+            implementationClass = "AndroidFlipperConventionPlugin"
+        }
     }
 }

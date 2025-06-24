@@ -16,13 +16,19 @@
 
 package com.groupec.cleanarchitecturesampleapp.core.network.di
 
+import android.content.Context
+import com.facebook.flipper.android.AndroidFlipperClient
+import com.facebook.flipper.plugins.network.FlipperOkhttpInterceptor
+import com.facebook.flipper.plugins.network.NetworkFlipperPlugin
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.groupec.cleanarchitecture.core.config.AppConfig
 import com.groupec.cleanarchitecturesampleapp.core.network.retrofit.ApiService
 import com.groupec.cleanarchitecturesampleapp.core.network.retrofit.common.Constants
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -36,10 +42,21 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun provideHttpClient() : OkHttpClient {
-        return OkHttpClient.Builder()
+    fun provideHttpClient(@ApplicationContext context: Context, appConfig: AppConfig) : OkHttpClient {
+        val builder = OkHttpClient.Builder()
             .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
-            .build()
+
+        if (appConfig.isDebug) {
+            val flipperPlugin = AndroidFlipperClient
+                .getInstance(context)
+                .getPluginByClass(NetworkFlipperPlugin::class.java)
+            flipperPlugin?.let {
+                builder.addNetworkInterceptor(FlipperOkhttpInterceptor(it))
+            }
+        }
+
+        return builder.build()
+
     }
 
     // Custom my gson to format date
@@ -54,11 +71,12 @@ class NetworkModule {
     @Provides
     @Singleton
     fun provideRetrofit(
+        appConfig: AppConfig,
         httpClient: OkHttpClient,
         gson: Gson // Inject the custom Gson instance
     ): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(Constants.BASE_URL)
+            .baseUrl(appConfig.baseUrl)
             .client(httpClient)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()

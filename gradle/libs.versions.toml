@@ -23,6 +23,8 @@ kotlinxCoroutines = "1.7.3"
 androidxLifecycle = "2.7.0"
 room = "2.6.1"
 androidxDataStore = "1.0.0"
+flipper = "0.183.0"
+soloader = "0.10.5"
 
 firebase-bom = "33.0.0"
 firebase-crashlytics-gradle = "3.0.3"
@@ -79,6 +81,10 @@ retrofit-kotlin-serialization = { group = "com.jakewharton.retrofit", name = "re
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "retrofitKotlinxSerializationJson" }
 androidx-dataStore-core = { group = "androidx.datastore", name = "datastore", version.ref = "androidxDataStore" }
 androidx-dataStore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "androidxDataStore" }
+facebook-flipper = { group = "com.facebook.flipper", name = "flipper", version.ref = "flipper" }
+facebook-soloader = { group = "com.facebook.soloader", name = "soloader", version.ref = "soloader" }
+facebook-flipper-noop = { group = "com.facebook.flipper", name = "flipper-noop", version.ref = "flipper" }
+facebook-flipper-network = { group = "com.facebook.flipper", name = "flipper-network-plugin", version.ref = "flipper" }
 
 # Dependencies of the included build-logic
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
@@ -108,5 +114,6 @@ common-android-application = { id = "gradlePlugins.android.application", version
 common-android-library = { id = "gradlePlugins.android.library", version = "unspecified" }
 common-android-feature = { id = "gradlePlugins.android.feature", version = "unspecified" }
 common-android-hilt = { id = "gradlePlugins.android.hilt", version = "unspecified" }
+common-android-flipper = { id = "gradlePlugins.android.flipper", version = "unspecified" }
 
 
