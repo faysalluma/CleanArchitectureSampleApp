@@ -23,13 +23,23 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+        buildFeatures {
+            buildConfig = true
+        }
     }
 
     buildTypes {
-
-        /*debug {
-            applicationIdSuffix = ".debug"
-        }*/
+        debug {
+            // applicationIdSuffix = ".debug"
+            // Definies config data
+            buildConfigField("boolean", "ENABLE_CRASH_REPORTING", "false")
+            buildConfigField("String", "BASE_URL", "\"https://sampleapp.groupec.net/public/\"")
+            buildConfigField("int", "NETWORK_TIMEOUT_SECONDS", "30")
+            buildConfigField("boolean", "FEATURE_X_ENABLED", "true")
+            buildConfigField("String", "GOOGLE_MAPS_API_KEY", "\"DEBUG_API_KEY\"")
+            buildConfigField("long", "TOKEN_EXPIRATION_TIME", "3600L")
+            buildConfigField("String", "DEFAULT_LOCALE", "\"en_US\"")
+        }
 
         release {
             isMinifyEnabled = true
@@ -37,9 +47,32 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            signingConfig = null // Disable signing for release builds
+            signingConfig = signingConfigs.getByName("debug") // Disable signing for release builds
+
+            // Definies config data
+            buildConfigField("boolean", "ENABLE_CRASH_REPORTING", "true")
+            buildConfigField("String", "BASE_URL", "\"https://sampleapp.groupec.net/public/\"")
+            buildConfigField("int", "NETWORK_TIMEOUT_SECONDS", "60")
+            buildConfigField("boolean", "FEATURE_X_ENABLED", "false")
+            buildConfigField("String", "GOOGLE_MAPS_API_KEY", "\"RELEASE_API_KEY\"")
+            buildConfigField("long", "TOKEN_EXPIRATION_TIME", "7200L")
+            buildConfigField("String", "DEFAULT_LOCALE", "\"fr_FR\"")
+
         }
     }
+
+    /*flavorDimensions += listOf("version")
+    productFlavors {
+        // Dimension : version
+        create("free") {
+            dimension = "version"
+            buildConfigField("boolean", "FEATURE_X_ENABLED", "false")
+        }
+        create("paid") {
+            dimension = "version"
+            buildConfigField("boolean", "FEATURE_X_ENABLED", "true")
+        }
+    }*/
 
     packaging {
         resources {
@@ -53,6 +86,7 @@ dependencies {
     implementation(project(":feature:detail"))
 
     implementation(project(":core:common"))
+    implementation(project(":core:config"))
     implementation(project(":core:ui"))
     implementation(project(":core:designsystem"))
     implementation(project(":core:data"))

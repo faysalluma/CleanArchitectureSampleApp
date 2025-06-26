@@ -10,6 +10,7 @@ android {
 
 dependencies {
     implementation(project(":core:common"))
+    implementation(project(":core:config"))
     implementation(project(":core:model"))
 
     implementation(libs.coil.kt.compose)
