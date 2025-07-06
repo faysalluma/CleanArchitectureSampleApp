@@ -1,20 +1,26 @@
 package com.groupec.cleanarchitecturesampleapp.ui
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.groupec.cleanarchitecturesampleapp.R
 import com.groupec.cleanarchitecturesampleapp.core.designsystem.component.ErrorScreen
 import com.groupec.cleanarchitecturesampleapp.core.model.data.Order
+import com.groupec.cleanarchitecturesampleapp.firebaseremoteconfig.FirebaseRemoteConfigViewModel
+import com.groupec.cleanarchitecturesampleapp.firebaseremoteconfig.HomeScreenContent
 import com.groupec.cleanarchitecturesampleapp.navigation.AppNavHost
 import com.groupec.cleanarchitecturesampleapp.navigation.NavigationItem
 
@@ -27,6 +33,10 @@ fun MainScreen(
     var appBarTitle = stringResource(id = R.string.app_name)
     var onNavigationClick: (() -> Unit)? = null
     var dropDownItemsMenu: List<Pair<String, () -> Unit>> = emptyList()
+
+    // Collect uiState from FirebaseRemoteConfigViewModel
+    val firebaseRemoteConfigViewModel: FirebaseRemoteConfigViewModel = hiltViewModel()
+    val uiState by firebaseRemoteConfigViewModel.uiState.collectAsStateWithLifecycle()
 
     val currentDestination = remember {
         mutableStateOf(navController.currentDestination?.route)
@@ -72,10 +82,15 @@ fun MainScreen(
         if (!connectionState) {
             ErrorScreen(error = "No internet connexion")
         } else {
-            Box(
-                modifier = Modifier.fillMaxWidth()
+            Column(
+                modifier = Modifier.fillMaxWidth().padding(it)
             ) {
-                AppNavHost(navController = navController, modifier = Modifier.padding(it))
+                HomeScreenContent(
+                    isVisibleBreakingNewsMessage = uiState.isVisibleBreakingNewsMessage,
+                    breakingNewsMessage = uiState.breakingNewsMessage,
+                    breakingNewsCount = uiState.breakingNewsCount,
+                )
+                AppNavHost(navController = navController, modifier = Modifier)
             }
         }
     }

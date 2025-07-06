@@ -1,5 +1,6 @@
 [versions]
 agp = "8.4.0"
+firebaseConfig = "22.0.1"
 kotlin = "2.0.0"
 androidGradlePlugin = "8.1.4"
 coreKtx = "1.13.1"
@@ -41,6 +42,7 @@ material = "1.12.0"
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
+firebase-config = { module = "com.google.firebase:firebase-config", version.ref = "firebaseConfig" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-bom" }
 junit5 = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }

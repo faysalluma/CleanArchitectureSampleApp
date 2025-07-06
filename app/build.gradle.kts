@@ -87,6 +87,7 @@ dependencies {
 
     implementation(project(":core:common"))
     implementation(project(":core:config"))
+    implementation(project(":core:firebaseremoteconfig"))
     implementation(project(":core:ui"))
     implementation(project(":core:designsystem"))
     implementation(project(":core:data"))
