@@ -1,5 +1,6 @@
 [versions]
 agp = "8.4.0"
+firebaseConfig = "22.0.1"
 kotlin = "2.0.0"
 androidGradlePlugin = "8.1.4"
 coreKtx = "1.13.1"
@@ -31,11 +32,15 @@ google-services = "4.4.2"
 compileSdk = "34"
 versionName = "1.1.0" # X.Y.Z; X = Major, Y = minor, Z = Patch level
 minSdk = "24"
+junitJunit = "4.13.2"
+appcompat = "1.7.1"
+material = "1.12.0"
 
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
+firebase-config = { module = "com.google.firebase:firebase-config", version.ref = "firebaseConfig" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-bom" }
 junit5 = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
@@ -80,6 +85,9 @@ androidx-dataStore-preferences = { group = "androidx.datastore", name = "datasto
 # Dependencies of the included build-logic
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+junit = { group = "junit", name = "junit", version.ref = "junitJunit" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
