@@ -1,0 +1,8 @@
+root = true
+
+[*.{kt,kts}]
+ktlint_standard_no-wildcard-imports = disabled #tu peux utiliser des * dans tes imports
+ktlint_standard_final-newline = disabled # Tu peux finir tes fichiers sans ligne vide
+ktlint_standard_function-naming = disabled # style de nommage pour les fonctions myFunc
+ktlint_standard_annotation = disabled # Il faut une ligne vide avant une annotation
+ktlint_standard_annotation = disabled # Il manque une ligne vide après la dernière annotation

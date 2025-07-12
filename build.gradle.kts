@@ -15,4 +15,7 @@ plugins {
     alias(libs.plugins.google.services) apply false
     // Add the dependency for the Crashlytics Gradle plugin
     alias(libs.plugins.firebase.crashlytics) apply false
+
+    // Ktlint-gradle
+    alias(libs.plugins.ktlint.gradle) apply false
 }
