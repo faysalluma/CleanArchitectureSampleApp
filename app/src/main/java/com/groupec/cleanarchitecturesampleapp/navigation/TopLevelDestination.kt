@@ -10,7 +10,7 @@ enum class TopLevelDestination(
 ) {
     HOME(
         titleTextId = homeR.string.feature_home_title,
-        iconTextId = homeR.string.feature_home_title
+        iconTextId = homeR.string.feature_home_title,
     ),
     DETAIL(
         titleTextId = detailR.string.feature_detail_title,

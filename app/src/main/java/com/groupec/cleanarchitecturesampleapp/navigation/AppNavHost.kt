@@ -35,14 +35,14 @@ fun AppNavHost(
         },
         exitTransition = {
             ExitTransition.None
-        }
+        },
     ) {
         composable(NavigationItem.Home.route) {
             HomeScreen(
                 onOrderClick = { order ->
                     navController.currentBackStackEntry?.savedStateHandle?.set("order", order)
                     navController.navigate(NavigationItem.Detail.route)
-                }
+                },
             )
         }
 
