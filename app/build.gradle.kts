@@ -1,3 +1,5 @@
+import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
+
 plugins {
     alias(libs.plugins.common.android.application)
     alias(libs.plugins.common.android.application.compose)
@@ -7,6 +9,9 @@ plugins {
     alias(libs.plugins.google.services)
     // Add the Crashlytics Gradle plugin
     alias(libs.plugins.firebase.crashlytics)
+
+    // Ktlint-gradle
+    alias(libs.plugins.ktlint.gradle)
 }
 
 val vcode = (((System.currentTimeMillis() / 1000) - 1451606400) / 10).toInt()
@@ -45,7 +50,7 @@ android {
             isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
             signingConfig = signingConfigs.getByName("debug") // Disable signing for release builds
 
@@ -57,7 +62,6 @@ android {
             buildConfigField("String", "GOOGLE_MAPS_API_KEY", "\"RELEASE_API_KEY\"")
             buildConfigField("long", "TOKEN_EXPIRATION_TIME", "7200L")
             buildConfigField("String", "DEFAULT_LOCALE", "\"fr_FR\"")
-
         }
     }
 
@@ -79,6 +83,19 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+}
+
+ktlint {
+    android.set(true) // Enable Android-specific linting rules
+    ignoreFailures.set(true) // Prevents build from failing due to linting errors
+    reporters {
+        reporter(ReporterType.PLAIN) // Output KtLint results in plain text format
+        reporter(ReporterType.HTML) // Output KtLint results in HTML format
+    }
+}
+
+tasks.named("build") {
+    dependsOn("ktlintFormat")
 }
 
 dependencies {
