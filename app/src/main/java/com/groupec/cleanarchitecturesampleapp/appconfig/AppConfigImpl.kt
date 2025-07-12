@@ -1,7 +1,7 @@
 package com.groupec.cleanarchitecturesampleapp.appconfig
 
-import com.groupec.cleanarchitecturesampleapp.BuildConfig
 import com.groupec.cleanarchitecture.core.config.AppConfig
+import com.groupec.cleanarchitecturesampleapp.BuildConfig
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -22,7 +22,7 @@ class AppConfigImpl @Inject constructor() : AppConfig {
         get() = BuildConfig.TOKEN_EXPIRATION_TIME
     override val defaultLocale: String
         get() = BuildConfig.DEFAULT_LOCALE
-    override val analyticsUrl: String ? = null
-    override val paymentApiUrl: String ? = null
-    override val defaultTheme: String ? = null
+    override val analyticsUrl: String? = null
+    override val paymentApiUrl: String? = null
+    override val defaultTheme: String? = null
 }

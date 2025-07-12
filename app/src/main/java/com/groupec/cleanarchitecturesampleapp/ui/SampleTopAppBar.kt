@@ -28,50 +28,51 @@ import com.groupec.cleanarchitecturesampleapp.core.designsystem.theme.White
 fun SampleTopAppBar(
     titleBar: String,
     onNavigationClick: (() -> Unit)? = null,
-    dropDownItemsMenu: List<Pair<String, () -> Unit>> = emptyList()
+    dropDownItemsMenu: List<Pair<String, () -> Unit>> = emptyList(),
 ) {
     var expanded by remember { mutableStateOf(false) }
 
     CenterAlignedTopAppBar(
-        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-            containerColor = Green,
-            titleContentColor = White,
-            navigationIconContentColor = White,
-            actionIconContentColor = White
-        ),
+        colors =
+            TopAppBarDefaults.centerAlignedTopAppBarColors(
+                containerColor = Green,
+                titleContentColor = White,
+                navigationIconContentColor = White,
+                actionIconContentColor = White,
+            ),
         title = { Text(text = titleBar, style = MaterialTheme.typography.titleMedium) },
         navigationIcon = {
             if (onNavigationClick != null) {
                 IconButton(onClick = { onNavigationClick() }) {
                     Icon(
                         imageVector = AppIcons.ArrowBack,
-                        contentDescription = "Back"
+                        contentDescription = "Back",
                     )
                 }
             }
         },
         actions = {
-            if (dropDownItemsMenu.isNotEmpty()){
-                IconButton(onClick = { expanded = true }) {
-                    Icon(AppIcons.MoreVert, contentDescription = "Menu")
-                }
-                DropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false },
-                    modifier = Modifier.background(White)
-                ) {
-                    dropDownItemsMenu.forEach {item ->
-                        DropdownMenuItem(
-                            text = { Text(item.first, color = Black) },
-                            onClick = { item.second() }
-                        )
+            if (dropDownItemsMenu.isNotEmpty())
+                {
+                    IconButton(onClick = { expanded = true }) {
+                        Icon(AppIcons.MoreVert, contentDescription = "Menu")
+                    }
+                    DropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false },
+                        modifier = Modifier.background(White),
+                    ) {
+                        dropDownItemsMenu.forEach { item ->
+                            DropdownMenuItem(
+                                text = { Text(item.first, color = Black) },
+                                onClick = { item.second() },
+                            )
+                        }
                     }
                 }
-            }
-        }
+        },
     )
 }
-
 
 @Preview("Top App Bar")
 @Composable
@@ -80,7 +81,7 @@ private fun NiaTopAppBarPreview() {
         SampleTopAppBar(
             titleBar = "My top bar",
             onNavigationClick = {},
-           dropDownItemsMenu = listOf(Pair("Settings", {}))
+            dropDownItemsMenu = listOf(Pair("Settings", {})),
         )
     }
 }

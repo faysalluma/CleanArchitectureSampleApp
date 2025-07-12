@@ -1,10 +1,8 @@
 package com.groupec.cleanarchitecturesampleapp.firebaseremoteconfig
 
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
@@ -31,13 +29,15 @@ fun HomeScreenContent(
     modifier: Modifier = Modifier,
 ) {
     Box(
-        modifier = modifier
-            .background(color = Color.White)
+        modifier =
+            modifier
+                .background(color = Color.White),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(all = 24.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(all = 24.dp),
         ) {
             Text(
                 modifier = Modifier.padding(top = 16.dp),
@@ -73,30 +73,34 @@ private fun BreakingNewsCard(
 ) {
     if (isVisibleBreakingNewsMessage) {
         Card(
-            modifier = modifier
-                .clip(
-                    shape = MaterialTheme.shapes.large
-                )
-                .shadow(
-                    elevation = 14.dp
-                )
+            modifier =
+                modifier
+                    .clip(
+                        shape = MaterialTheme.shapes.large,
+                    )
+                    .shadow(
+                        elevation = 14.dp,
+                    ),
         ) {
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(all = 24.dp)
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(all = 24.dp),
             ) {
                 Text(
                     text = "$breakingNewsCount $breakingNewsMessage",
                     fontSize = 16.sp,
-                    style = TextStyle(
-                        fontWeight = FontWeight.Bold
-                    )
+                    style =
+                        TextStyle(
+                            fontWeight = FontWeight.Bold,
+                        ),
                 )
                 Button(
-                    modifier = Modifier
-                        .padding(top = 16.dp)
-                        .align(alignment = Alignment.End),
+                    modifier =
+                        Modifier
+                            .padding(top = 16.dp)
+                            .align(alignment = Alignment.End),
                     onClick = { },
                 ) {
                     Text(

@@ -1,6 +1,5 @@
 package com.groupec.cleanarchitecturesampleapp.ui
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -24,11 +23,10 @@ import com.groupec.cleanarchitecturesampleapp.firebaseremoteconfig.HomeScreenCon
 import com.groupec.cleanarchitecturesampleapp.navigation.AppNavHost
 import com.groupec.cleanarchitecturesampleapp.navigation.NavigationItem
 
-
 @Composable
 fun MainScreen(
     connectionState: Boolean,
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController(),
 ) {
     var appBarTitle = stringResource(id = R.string.app_name)
     var onNavigationClick: (() -> Unit)? = null
@@ -38,9 +36,10 @@ fun MainScreen(
     val firebaseRemoteConfigViewModel: FirebaseRemoteConfigViewModel = hiltViewModel()
     val uiState by firebaseRemoteConfigViewModel.uiState.collectAsStateWithLifecycle()
 
-    val currentDestination = remember {
-        mutableStateOf(navController.currentDestination?.route)
-    }
+    val currentDestination =
+        remember {
+            mutableStateOf(navController.currentDestination?.route)
+        }
 
     LaunchedEffect(navController) {
         navController.addOnDestinationChangedListener { _, destination, arguments ->
@@ -75,15 +74,15 @@ fun MainScreen(
             SampleTopAppBar(
                 appBarTitle,
                 onNavigationClick,
-                dropDownItemsMenu
+                dropDownItemsMenu,
             )
-        }
+        },
     ) {
         if (!connectionState) {
             ErrorScreen(error = "No internet connexion")
         } else {
             Column(
-                modifier = Modifier.fillMaxWidth().padding(it)
+                modifier = Modifier.fillMaxWidth().padding(it),
             ) {
                 HomeScreenContent(
                     isVisibleBreakingNewsMessage = uiState.isVisibleBreakingNewsMessage,
@@ -101,4 +100,3 @@ fun getDropdownItemsWithActions(navController: NavHostController): List<Pair<Str
         DropdownItem.Settings.name to { /* navController.executeAction() */ },
     )
 }
-
