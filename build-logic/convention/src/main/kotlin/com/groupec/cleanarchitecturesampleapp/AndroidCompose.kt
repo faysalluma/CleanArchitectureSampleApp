@@ -19,6 +19,10 @@ internal fun Project.configureAndroidCompose (
         add("implementation", libs.findLibrary("androidx.ui").get())
         add("implementation", libs.findLibrary("androidx.ui.tooling.preview").get())
         add("implementation", libs.findLibrary("androidx.material3").get())
+        // Library for list detail pane
+        add("implementation", libs.findLibrary("androidx.compose.material3.adaptive").get())
+        add("implementation", libs.findLibrary("androidx.compose.material3.adaptive.layout").get())
+        add("implementation", libs.findLibrary("androidx.compose.material3.adaptive.navigation").get())
         add("debugImplementation", libs.findLibrary("androidx.ui.tooling").get())
     }
 
